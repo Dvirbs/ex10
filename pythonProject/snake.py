@@ -1,10 +1,9 @@
 class Node:
-    def __init__(self, prev=None, next=None):
-        self.data = 'Black'  # TODO how to fulfill the data for black pixel
+    def __init__(self, data: Tuple, prev: Node =None, next: Node =None):
+        self.data = data
         self.prev = prev
         self.next = next
 
-#ddלשג
 class SnakeDoubleLinkedList:
     """
     create a snake
