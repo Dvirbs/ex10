@@ -4,7 +4,7 @@ class Node:
         self.prev = prev
         self.next = next
 
-#ddלש
+#ddלשג
 class SnakeDoubleLinkedList:
     """
     create a snake
