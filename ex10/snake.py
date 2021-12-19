@@ -46,6 +46,47 @@ class Snake:
     def set_color(self, color: str):
         self.__color = color
 
+    def possible_moves(self):
+        """מחזירה על סמך הכיוון הנוכחי של הנחש מהם המהלכים האפשריים"""
+        if self.__orientation == "Right":
+            return ["Down", "Up"]
+        if self.__orientation == "Left":
+            return ["Down", "Up"]
+        if self.__orientation == "Up":
+            return ["Right", "Left"]
+        if self.__orientation == "Down":
+            return ["Right", "Left"]
+
+    def set_orientation(self, movekey):
+        possible_move = self.possible_moves()
+        if movekey in possible_move:  # אם הכיוון נמצא ברשימת הכיוונים - נעדכן את הכיוון.
+            self.__orientation = movekey
+
+    def move(self):
+        """פונקציה המקבלת כיוון ומחזירה אמת אם הנחש זז בהצלחה, שקר אחרת"""
+        row_head = self.get_head().get_data()[0]
+        col_head = self.get_head().get_data()[1]
+
+        if self.__orientation == "Right":
+            x = row_head
+            y = col_head + 1
+        elif self.__orientation == "Left":
+            x = row_head
+            y = col_head - 1
+        elif self.__orientation == "Down":
+            x = row_head + 1
+            y = col_head
+        else:
+            x = row_head - 1
+            y = col_head
+        if self.in_crash((x, y)):  # אם הראש העתידי של הנחש יפגע בגופו נחזיר False
+             return False
+        new_head = Node((x, y))
+        self.add_new_head(new_head)
+        print(self.get_location())
+        self.remove_tail()
+        print(self.get_location())
+        return True
 
 s = Snake()
 head = Node((7,10))
