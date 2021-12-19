@@ -94,14 +94,6 @@ s.add_new_head(head)
 head = Node((7,11))
 s.add_new_head(head)
 
-print(s.get_head().get_data())
-print(s.get_tail().get_data())
-head = Node((7,12))
-s.add_new_head(head)
-print(s.get_head().get_data())
-print(s.get_tail().get_data())
-s.remove_tail()
-print(s.get_head().get_data())
-print(s.get_tail().get_data())
-# print(s.get_location())
+print(s.get_location())
+
 
