@@ -15,6 +15,7 @@ class Game:
     Apple_color = 'green'  # TODO האם צריך לרשום את זה מחוץ לאינט או בתוכו
     Snake_color = 'Black'
     Bomb_color = 'red'
+    Blast_color = 'orange'
 
     def __init__(self):
         self.snake = Snake()  # TODO change to now see
@@ -22,32 +23,41 @@ class Game:
         self.__apples = []
         self.__score = 0
 
-    def in_board(self, row, col):
+    def in_board(self, x, y):
         """
         function that tell if we are in the board
         :param col: object row
         :param row: object row
         :return: True if in the board and False else
         """
-        in_rows = row < self.Hight
-        in_columns = col < self.Width
-        return in_rows and in_columns
+        in_Width = -1 < x and x < self.Width
+        in_Hight = -1 < y and y < self.Hight
+        return in_Width and in_Hight
 
-    def cell_empty(self, row, col) -> bool:
+    def all_bombs_blasts(self) -> List[Tuple]:
+        all_blasts = list()
+        for bomb in self.__bombs:
+            if bomb.get_time() < 0:
+                all_blasts += bomb.blast_cords()
+        return all_blasts
+
+    def cell_empty(self, x, y) -> bool:
         """
         check if cell is empty
-        :param row: row number of object
-        :param col: col number of object
+        :param x: row number of object
+        :param y: col number of object
         :return: True ig cell empty and False if not
         """
         snake_cords: List = self.snake.get_locations()
         bombs_cords: List[Tuple] = self.bomb_cells()
         apple_cords: List = [apple.get_location for apple in self.__apples]
+        blast_cords: List = self.all_bombs_blasts()
         all = []
         all += snake_cords
         all += bombs_cords
         all += apple_cords
-        if (row, col) in all:
+        all += blast_cords
+        if (x, y) in all:
             return False
         return True
 
@@ -56,8 +66,16 @@ class Game:
             gd.draw_cell(loc[0], loc[1], self.Snake_color)
         for apple_row, apple_col in self.apples_cells():
             gd.draw_cell(apple_row, apple_col, self.Apple_color)
-        for bomb_row, bomb_col in self.bomb_cells():
-            gd.draw_cell(bomb_row, bomb_col, self.Bomb_color)
+        for bomb in self.get_bombs():
+            if bomb.get_time() >= 0:
+                bomb_row = bomb.get_location()[0]
+                bomb_col = bomb.get_location()[1]
+                gd.draw_cell(bomb_row, bomb_col, self.Bomb_color)
+            else:
+                blast_cords_list = bomb.blast_cords()
+                for blast_row, blast_col in blast_cords_list:
+                    if self.in_board(blast_row, blast_col):
+                        gd.draw_cell(blast_row, blast_col, self.Blast_color)
 
     ##### snake part  #####
 
@@ -96,8 +114,8 @@ class Game:
         while len(self.__bombs) < 3:
             bomb: Bomb = Bomb()
             bomb.set_bomb()
-            row, col = bomb.get_location()
-            if self.cell_empty(row, col) and self.in_board(row, col):
+            x, y = bomb.get_location()
+            if self.cell_empty(x, y) and self.in_board(x, y):
                 self.__bombs.append(bomb)
 
     def bomb_cells(self) -> List[Tuple]:
@@ -105,12 +123,9 @@ class Game:
         for bomb in self.__bombs:
             bomb_list.append(bomb.get_location())
         return bomb_list
+
     def remove_bomb(self, bomb: Bomb) -> None:
         self.__bombs.remove(bomb)
-
-
-
-
 
     ######## apple part  #########
 
@@ -135,9 +150,9 @@ class Game:
             iphon: Apple = apple.Apple()
             iphon.set_apple()
             iphon.set_color(self.Apple_color)
-            (row, col) = iphon.get_location()
-            if self.cell_empty(row, col) and self.in_board(row,
-                                                           col):  # TODO function that collactiong the snake and bomb cells
+            (x, y) = iphon.get_location()
+            if self.cell_empty(x, y) and self.in_board(x,
+                                                       y):  # TODO function that collactiong the snake and bomb cells
                 self.__apples.append(iphon)
 
     def apples_cells(self) -> List[Tuple]:
@@ -204,12 +219,15 @@ def main_loop(gd: GameDisplay) -> None:
         # check if the snake run into bomb
         for bomb in game.get_bombs():
             bomb.time_getting_smaller()
-            if bomb.get_time() == 0:
+
+            if -bomb.get_time() == bomb.get_redius():
                 game.remove_bomb(bomb)
-                game.add_bombs()
+
             if game.snake.get_head() == bomb.get_location():
-                # TODO draw the bomb on the board
+                # TODO draw the big bomb on the board
                 return
+        if set(game.snake.get_locations()) & set(game.all_bombs_blasts()):
+            return
 
         # apple part
         for apple in game.apples_list():
@@ -220,6 +238,7 @@ def main_loop(gd: GameDisplay) -> None:
 
         gd.show_score(game.get_score())
         game.draw(gd)
+        game.add_bombs()
         game.add_apples()
 
         gd.end_round()

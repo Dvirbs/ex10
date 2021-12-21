@@ -1,4 +1,6 @@
 import game_parameters
+
+
 class Bomb:
     COLOR = "red"
 
@@ -11,29 +13,30 @@ class Bomb:
         return self.__location
 
     def set_bomb(self):
-        column, row, radius, time = game_parameters.get_random_bomb_data()  # הכנסת המידע לתוך רשימה
-        self.__location = column, row
+        x, y, radius, time = game_parameters.get_random_bomb_data()  # הכנסת המידע לתוך רשימה
+        self.__location = x, y
         self.__radius = radius
         self.__time = time
 
-    def coordinates_by_radius(self, radius):
-        if radius == 0:
-            return self.__location
+    def blast_cords(self):
+        radius = self.get_time()
         if radius < 0:
-            radius = -1*radius
-        v = [(self.__location[0], self.__location[1] + radius), (self.__location[0], self.__location[1] - radius),
-             (self.__location[0] + radius, self.__location[1]), (self.__location[0] - radius, self.__location[1])]
+            radius = -1 * radius
+        blast_cords_list: List[Tuple] = [(self.__location[0], self.__location[1] + radius),
+                                         (self.__location[0], self.__location[1] - radius),
+                                         (self.__location[0] + radius, self.__location[1]),
+                                         (self.__location[0] - radius, self.__location[1])]
         j = 1
         for i in range(self.__location[0] - radius + 1, self.__location[0], 1):
-            v.append((i, self.__location[1] + j))
-            v.append((i, self.__location[1] - j))
+            blast_cords_list.append((i, self.__location[1] + j))
+            blast_cords_list.append((i, self.__location[1] - j))
             j += 1
         j = 1
         for i in range(self.__location[0] + radius - 1, self.__location[0], -1):
-            v.append((i, self.__location[1] + j))
-            v.append((i, self.__location[1] - j))
+            blast_cords_list.append((i, self.__location[1] + j))
+            blast_cords_list.append((i, self.__location[1] - j))
             j += 1
-        return v
+        return blast_cords_list
 
     def time_getting_smaller(self) -> None:
         self.__time -= 1
@@ -41,11 +44,5 @@ class Bomb:
     def get_time(self) -> int:
         return self.__time
 
-
-
-
-
-
-
-
-
+    def get_redius(self) -> int:
+        return self.__radius

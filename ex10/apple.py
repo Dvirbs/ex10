@@ -24,8 +24,8 @@ class Apple:
         return self.__color
 
     def set_apple(self) -> None:
-        column, row, score = game_parameters.get_random_apple_data()
-        self.__locatation = column, row    #TODO check if we need to replace column and row
+        x, y, score = game_parameters.get_random_apple_data()
+        self.__locatation = x, y    #TODO check if we need to replace column and row
         self.__score = score
 
     def get_location(self) -> Tuple:
