@@ -7,7 +7,7 @@ class Snake:
         self.__tail = None
         self.__length = 0
         self.__color = None
-        self.__orientation = 'Right'
+        self.__orientation = 'Up'
         self.__locations = []
 
     def get_length(self):
@@ -20,7 +20,7 @@ class Snake:
         :return: None
         """
         self.__length += 1
-        self.__locations.insert(1, new_head)
+        self.__locations.insert(0,new_head) #TODO add to the begining
 
     def get_location(self):
         return self.__locations
@@ -31,13 +31,17 @@ class Snake:
     def get_tail(self) -> Tuple[int, int]:
         return self.__locations[-1]
 
+    def add_to_tail(self, new_tail: Tuple[int, int]) -> None:
+        self.__length += 1
+        self.__locations.append(new_tail)
+
     def remove_tail(self):
         """
         rmove the location of the snake's tail
         :return: None
         """
         self.__length -= 1
-        self.get_location().pop()
+        return self.get_location().pop()
 
     def set_color(self, color: str):
         self.__color = color
@@ -63,24 +67,18 @@ class Snake:
         row_head = self.get_head()[0]
         col_head = self.get_head()[1]
 
-        if self.__orientation == "Right":
+        if self.__orientation == "Up":
             x = row_head
             y = col_head + 1
-        elif self.__orientation == "Left":
+        elif self.__orientation == "Down":
             x = row_head
             y = col_head - 1
-        elif self.__orientation == "Down":
+        elif self.__orientation == "Right":
             x = row_head + 1
             y = col_head
         else:
             x = row_head - 1
             y = col_head
-        # if self.in_crash((x, y)):  # אם הראש העתידי של הנחש יפגע בגופו נחזיר False
-        #      return False
         new_head = (x, y)
         self.add_new_head(new_head)
-        self.remove_tail()
-        return True
-
-
-
+        return self.remove_tail()

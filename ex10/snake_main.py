@@ -3,18 +3,46 @@ import game_parameters
 from game_display import GameDisplay
 import bomb
 from snake import Snake
+import apple
 
 
 class Game:
+    Hight = game_parameters.HEIGHT
+    Width = game_parameters.WIDTH
+
     def __init__(self):
-        bd = []
-        for i in range(game_parameters.HEIGHT):
-            bd.append([])
-            for j in range(game_parameters.WIDTH):
-                bd[i].append(0)
-            self.board = bd
-            self.snake = Snake()
-            self.bombs = []
+            self.__snake = Snake()
+            self.__bombs = []
+            self.__apples = []
+
+
+    def set_initial_snake(self) -> None:
+        game.snake.add_new_head((10, 10))
+        game.snake.add_new_head((9, 10))
+        game.snake.add_new_head((8, 10))
+
+    def in_board(self, row, col):
+        """
+        function that tell if we are in the board
+        :param col: object row
+        :param row: object row
+        :return: True if in the board and False else
+        """
+        in_rows =  row < self.Hight
+        in_columns =  col < self.Width
+        return in_rows and in_columns
+
+    def set_apples(self) ->None:
+        while len(self.__apples)<3:
+            apple = apple.Apple
+            apple.set_apple()
+            apple.set_color('Green')
+            row, col  = apple.get_location()
+            if cel_empty(row, col) and self.in_board(row, col): #TODO function that collactiong the snake and bomb cells
+                self.__apples.append(apple)
+
+
+
 
     def cell_is_empty(self, coordinate):
         """בעיקרון המחשבה הייתה לסמן תאים ריקים כאפסים, תאי נחש - 1, תאי פצצה - 2, תאי הדף- 3"""
@@ -23,6 +51,7 @@ class Game:
         :param coordinate: tuple of (row,col) of the coordinate to check
         :return: num of object if their is object in coordinate, True if empty
         """
+        #TODO לבנות פונקציה אחרת שנונת את הקורדינטות התפוסות
         if self.board[list(coordinate)[0]][list(coordinate)[1]] == 0:
             return True
         return self.board[list(coordinate)[0]][list(coordinate)[1]]
@@ -40,7 +69,7 @@ class Game:
                 self.board[row][col] = 2
                 self.bombs.append(bomb.Bomb((row, col), lst_bomb_data[2], lst_bomb_data[3]))
 
-    def bad_cells(self) -> list:
+    def bomb_cells(self) -> list:
         "מחזירה רשימה של תאים בהם מופיעות פצצות או גלי הדף"
         lst_cells = []
         for bomb in self.bombs:
@@ -61,7 +90,7 @@ class Game:
         row_head = self.snake.get_head()[0]
         col_head = self.snake.get_head()[1]
         # בדיקה האם הנחש הגיע לתא שנמצא ברשימה השחורה או אם חרג מהלוח
-        if (row_head, col_head) in self.bad_cells() or \
+        if (row_head, col_head) in self.bomb_cells() or \
                 row_head > game_parameters.HEIGHT or col_head > game_parameters.WIDTH:
             return
         return tail
@@ -74,22 +103,22 @@ class Game:
 def main_loop(gd: GameDisplay) -> None:
     gd.show_score(0)
     game = Game()
-    game.snake.add_new_head((10,10))
-    game.snake.add_new_head((9,10))
-    game.snake.add_new_head((8,10))
+    game.set_initial_snake()
 
-    count_apple = 0
+
+    count_increase = 0
     tail = None
     while True:
+        print(game.snake.get_length())
         key_clicked = gd.get_key_clicked()
         if key_clicked:
             game.snake.set_orientation(key_clicked)
-        if count_apple > 0 and tail:
+        if count_increase > 0 and tail:
             game.eat_apple(tail)
-            count_apple -= 1
+            count_increase -= 1
         tail = game.move_snake()
         if game.snake.get_head() == (20,9) or game.snake.get_head()==(22,9):
-            count_apple += 3
+            count_increase += 3
         for loc in game.snake.get_location():
             gd.draw_cell(loc[0], loc[1], "Black")
         gd.draw_cell(20, 9, "green")
