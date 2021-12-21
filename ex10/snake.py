@@ -7,8 +7,11 @@ class Snake:
         self.__tail = None
         self.__length = 0
         self.__color = None
-        self.__move_direcation = 'Right'
+        self.__orientation = 'Right'
         self.__locations = []
+
+    def get_length(self):
+        return self.__length
 
     def add_new_head(self, new_head: Tuple[int, int]) -> None:
         """
@@ -17,7 +20,7 @@ class Snake:
         :return: None
         """
         self.__length += 1
-        self.__locations.append(new_head) #TODO add to the begining
+        self.__locations.insert(1, new_head)
 
     def get_location(self):
         return self.__locations
@@ -34,7 +37,7 @@ class Snake:
         :return: None
         """
         self.__length -= 1
-        self.__locations = self.get_location()[:-1]
+        self.get_location().pop()
 
     def set_color(self, color: str):
         self.__color = color
@@ -80,13 +83,4 @@ class Snake:
         return True
 
 
-s = Snake()
-head = (7, 10)
-s.add_new_head(head)
-head = (7, 11)
-s.add_new_head(head)
-head = (7, 12)
-s.add_new_head(head)
-print(s.get_location())
-s.move()
-print(s.get_location())
+
