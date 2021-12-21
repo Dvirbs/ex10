@@ -10,7 +10,6 @@ class Bomb:
     def get_location(self):
         return self.__location
 
-
     def set_bomb(self):
         column, row, radius, time = game_parameters.get_random_bomb_data()  # הכנסת המידע לתוך רשימה
         self.__location = column, row
@@ -36,12 +35,14 @@ class Bomb:
             j += 1
         return v
 
-    def update_time(self, time):
-        """
-        :param crds_loc: A tuple representing the coords of the required location.
-        :return: True upon success, False otherwise
-        """
-        self.__time = time
+    def time_getting_smaller(self) -> None:
+        self.__time -= 1
+
+    def get_time(self) -> int:
+        return self.__time
+
+
+
 
 
 
