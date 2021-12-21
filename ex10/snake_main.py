@@ -13,9 +13,10 @@ class Game:
     Width = game_parameters.WIDTH
     Apple_color = 'green'  # TODO האם צריך לרשום את זה מחוץ לאינט או בתוכו
     Snake_color = 'Black'
+    Bomb_color = 'red'
 
     def __init__(self):
-        self.snake = Snake() #TODO change to now see
+        self.snake = Snake()  # TODO change to now see
         self.__bombs = []
         self.__apples = []
         self.__score = 0
@@ -29,7 +30,7 @@ class Game:
     def get_snake(self):
         return self.snake
 
-    def get_apples(self):
+    def apples_list(self):
         return self.__apples
 
     def remove_apple(self, apple) -> None:
@@ -83,41 +84,37 @@ class Game:
             return False
         return True
 
-    def cell_is_empty(self, coordinate):
-        """בעיקרון המחשבה הייתה לסמן תאים ריקים כאפסים, תאי נחש - 1, תאי פצצה - 2, תאי הדף- 3"""
-        """
-        Checks if the given coordinates are empty.
-        :param coordinate: tuple of (row,col) of the coordinate to check
-        :return: num of object if their is object in coordinate, True if empty
-        """
-        # TODO לבנות פונקציה אחרת שנונת את הקורדינטות התפוסות
-        if self.board[list(coordinate)[0]][list(coordinate)[1]] == 0:
-            return True
-        return self.board[list(coordinate)[0]][list(coordinate)[1]]
-
+    def get_bombs(self):
+        return self.__bombs
+    #def add_bombs(self) -> None:
+    #    pass
     def add_bombs(self) -> None:
         """המתודה מריצה פצצות באופן רנדומלי ואם הם מתאימות היא מכניסה אותן ל self.bombs.
         הלולאה נעצרת כאשר יש 3 פצצות ברשימה.
         """
-        while len(self.bombs) < 3:
+        while len(self.__bombs) < 3:
             lst_bomb_data = list(game_parameters.get_random_bomb_data())  # הכנסת המידע לתוך רשימה
             row = lst_bomb_data[1]
             col = lst_bomb_data[0]
             # בדיקה האם הפצצה מתאימה למשחק
-            if self.cell_is_empty((row, col)) and row < game_parameters.HEIGHT or col < game_parameters.WIDTH:
-                self.board[row][col] = 2
-                self.bombs.append(bomb.Bomb((row, col), lst_bomb_data[2], lst_bomb_data[3]))
+            if self.cell_empty(row, col) and self.in_board(row, col):
+                redius = lst_bomb_data[2]
+                time = lst_bomb_data[3]
+                self.__bombs.append(bomb.Bomb((row, col), redius, time ))
 
-    def bomb_cells(self) -> list:
+
+    def bomb_cells(self) -> Tuple[List,List]:
         "מחזירה רשימה של תאים בהם מופיעות פצצות או גלי הדף"
-        lst_cells = []
+        bomb_cells = []
+        blast_cells = []
+
         for bomb in self.__bombs:
-            if bomb.time <= 0:  # לזכור שבזמן הזה הטיים ז מינוס.. לא לשכוח להתייחס לזה
-                lst_cells += bomb.coordinates_by_radius(bomb.time)
-            else:
-                lst_cells.append(bomb.location)
-            lst_cells.append += self.snake.move()[0:]
-        return lst_cells
+            if bomb.time <= 0:  # saving the blast waves when the time is finish
+                blast_cells += bomb.coordinates_by_radius(bomb.time)
+                #saving the bomb location before time is finish
+            else: #TODO check if we can להגריל bomb in the same location of the bomb that  couse the blast on the board
+                bomb_cells.append(bomb.location)
+        return bomb_cells, blast_cells
 
     def move_snake(self):
         """
@@ -142,6 +139,11 @@ class Game:
             gd.draw_cell(loc[0], loc[1], self.Snake_color)
         for apple_row, apple_col in self.apples_cells():
             gd.draw_cell(apple_row, apple_col, self.Apple_color)
+        bomb_cells, blast_cells = self.bomb_cells()
+        for bomb_row, bomb_col in bomb_cells:
+            print(bomb_row, bomb_col)
+            gd.draw_cell(bomb_row, bomb_col, self.Bomb_color)
+
 
     def apples_cells(self) -> List[Tuple]:
         """
@@ -159,6 +161,7 @@ def main_loop(gd: GameDisplay) -> None:
     game = Game()
     gd.show_score(game.get_score())
     game.set_initial_snake()
+    game.add_bombs()
     game.add_apples()
     count_increase = 0
     tail = None
@@ -170,13 +173,18 @@ def main_loop(gd: GameDisplay) -> None:
             game.eat_apple(tail)
             count_increase -= 1
         tail = game.move_snake()
-
+        # check if snake run into himself
         if game.snake.get_head() in game.snake.get_locations()[1:]:
-            #TODO board with game over
+            # TODO board with game over
             break
+        # check if the snake run into bomb
+        for bomb in game.get_bombs():
+            if game.snake.get_head() == bomb.location:
+                # TODO draw the bomb on the board
+                return
 
         # apple part
-        for apple in game.get_apples():
+        for apple in game.apples_list():
             if game.snake.get_head() == apple.get_location():
                 count_increase += 3
                 game.set_score(apple.get_score())
