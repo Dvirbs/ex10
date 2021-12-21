@@ -15,7 +15,7 @@ def get_random_apple_data() -> Tuple[int, int, int]:
     score = random.randint(1, 5)
 
     return x, y, score
-#dsad
+
 
 def get_random_bomb_data() -> Tuple[int, int, int, int]:
     """

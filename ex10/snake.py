@@ -22,7 +22,7 @@ class Snake:
         self.__length += 1
         self.__locations.insert(0,new_head) #TODO add to the begining
 
-    def get_location(self):
+    def get_locations(self) -> List:
         return self.__locations
 
     def get_head(self) -> Tuple[int, int]:
@@ -41,7 +41,7 @@ class Snake:
         :return: None
         """
         self.__length -= 1
-        return self.get_location().pop()
+        return self.get_locations().pop()
 
     def set_color(self, color: str):
         self.__color = color

@@ -36,6 +36,5 @@ class Bomb:
 
 
 
-b = Bomb((4,3), 4, 2)
-print(b.coordinates_by_radius(3))
+
 

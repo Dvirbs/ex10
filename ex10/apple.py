@@ -17,8 +17,11 @@ class Apple:
         self.__color = None
 
 
-    def set_color(self, color: str):
+    def set_color(self, color: str) -> None:
         self.__color = color
+
+    def get_color(self) -> str:
+        return self.__color
 
     def set_apple(self) -> None:
         x, y, score = game_parameters.get_random_apple_data()
@@ -29,6 +32,6 @@ class Apple:
         return self.__locatation
 
     def get_score(self) -> int:
-        return self.__locatation
+        return self.__score
 
 
