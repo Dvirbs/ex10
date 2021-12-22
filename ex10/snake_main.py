@@ -17,6 +17,8 @@ class Game:
     Snake_color = 'Black'
     Bomb_color = 'red'
     Blast_color = 'orange'
+    Number_of_bombs = 1
+
 
     def __init__(self):
         self.snake = Snake()  # TODO change to now see
@@ -87,9 +89,9 @@ class Game:
         return self.snake
 
     def set_initial_snake(self) -> None:
+        self.snake.add_new_head((10, 8))
+        self.snake.add_new_head((10, 9))
         self.snake.add_new_head((10, 10))
-        self.snake.add_new_head((9, 10))
-        self.snake.add_new_head((8, 10))
 
 
     def eat_apple(self, tail):
@@ -101,7 +103,7 @@ class Game:
         return self.__bombs
 
     def add_bombs(self) -> None:
-        while len(self.__bombs) < 1:
+        while len(self.__bombs) < self.Number_of_bombs:
             bomb: Bomb = Bomb()
             bomb.set_bomb()
             x, y = bomb.get_location()
@@ -118,6 +120,11 @@ class Game:
         self.__bombs.remove(bomb)
 
     ######## apple part  #########
+
+    def get_apple_by_cord(self, apple_cords):
+        for apple in self.__apples:
+            if apple_cords == apple.get_location():
+                return apple
 
     def set_score(self, score) -> None:
         self.__score += score
@@ -211,6 +218,15 @@ def main_loop(gd: GameDisplay) -> None:
         # check if snake tuch the blasts
         if set(snake.get_locations()) & set(game.all_bombs_blasts()):
             another_loop = False
+
+        problamtic_apple_list = set(game.apples_cells()) & set(game.all_bombs_blasts())
+        for problamtic_apple in problamtic_apple_list:
+            if problamtic_apple:
+                apple = game.get_apple_by_cord(tuple(problamtic_apple))
+                game.remove_apple(apple)
+
+
+
 
         # if blast hit an apple
         # for apple in apples:
