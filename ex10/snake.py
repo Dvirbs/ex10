@@ -43,6 +43,14 @@ class Snake:
         self.__length -= 1
         return self.get_locations().pop()
 
+    def remove_head(self):
+        """
+        rmove the location of the snake's tail
+        :return: None
+        """
+        self.__length -= 1
+        return self.get_locations().pop(0)
+
     def set_color(self, color: str):
         self.__color = color
 

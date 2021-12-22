@@ -16,10 +16,12 @@ class Bomb:
         x, y, radius, time = game_parameters.get_random_bomb_data()  # הכנסת המידע לתוך רשימה
         self.__location = x, y
         self.__radius = radius
-        self.__time = 3  #time
+        self.__time = time + 1+1000000000
 
     def blast_cords(self):
         radius = self.get_time()
+        if radius == 0:
+            return [(self.__location[0], self.__location[1])]
         if radius < 0:
             radius = -1 * radius
         blast_cords_list: List[Tuple] = [(self.__location[0], self.__location[1] + radius),
