@@ -7,6 +7,7 @@ import bomb
 from snake import Snake
 import apple
 from typing import *
+import time  #only for tests
 
 
 class Game:
@@ -111,7 +112,7 @@ class Game:
         return self.__bombs
 
     def add_bombs(self) -> None:
-        while len(self.__bombs) < 3:
+        while len(self.__bombs) < 1:
             bomb: Bomb = Bomb()
             bomb.set_bomb()
             x, y = bomb.get_location()
@@ -203,6 +204,7 @@ def main_loop(gd: GameDisplay) -> None:
     count_increase = 0
     tail = None
     while True:
+        time.sleep(0.5)  #every loop slow the time for check test
         key_clicked = gd.get_key_clicked()
         if key_clicked:
             game.snake.set_orientation(key_clicked)
@@ -242,3 +244,8 @@ def main_loop(gd: GameDisplay) -> None:
         game.add_apples()
 
         gd.end_round()
+
+# 78 Function call: GameDisplay(456,['Left', None, None, 'Down', 'Right', None, 'Up', 'Left', None, None, None, 'Up', 'Right', 'Down'],79
+# Expected return value: [(0, {(10, 10): 'black', (10, 9): 'black', (10, 8): 'black', (9, 10): 'red', (37, 9): 'green', (25, 29): 'green', (10, 27): 'green'}),
+#                         (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 11): 'black', (10, 10): 'black', (10, 9): 'black', (9, 10): 'red'}),
+#                         (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 12): 'black', (10, 11): 'black', (10, 10): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 13): 'black', (10, 12): 'black', (10, 11): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 14): 'black', (10, 13): 'black', (10, 12): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 15): 'black', (10, 14): 'black', (10, 13): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 16): 'black', (10, 15): 'black', (10, 14): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 17): 'black', (10, 16): 'black', (10, 15): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 18): 'black', (10, 17): 'black', (10, 16): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 19): 'black', (10, 18): 'black', (10, 17): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (9, 19): 'black', (10, 19): 'black', (10, 18): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (8, 19): 'black', (9, 19): 'black', (10, 19): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 19): 'black', (8, 19): 'black', (9, 19): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 18): 'black', (7, 19): 'black', (8, 19): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 17): 'black', (7, 18): 'black', (7, 19): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 16): 'black', (7, 17): 'black', (7, 18): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 15): 'black', (7, 16): 'black', (7, 17): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 14): 'black', (7, 15): 'black', (7, 16): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 13): 'black', (7, 14): 'black', (7, 15): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 12): 'black', (7, 13): 'black', (7, 14): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 11): 'black', (7, 12): 'black', (7, 13): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 10): 'black', (7, 11): 'black', (7, 12): 'black', (9, 10): 'orange'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 9): 'black', (7, 10): 'black', (7, 11): 'black', (9, 11): 'orange', (8, 10): 'orange', (9, 9): 'orange', (10, 10): 'orange'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 8): 'black', (7, 9): 'black', (7, 10): 'orange', (9, 12): 'orange', (10, 11): 'orange', (8, 11): 'orange', (9, 8): 'orange', (8, 9): 'orange', (11, 10): 'orange', (10, 9): 'orange'})]
