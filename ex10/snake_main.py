@@ -9,7 +9,7 @@ import apple
 from typing import *
 import time  #only for tests
 
-
+#TODO first the apple need to show up immedtialy fater eating apple, second after stock in my body i remove 2 insead of 1
 class Game:
     Hight = game_parameters.HEIGHT
     Width = game_parameters.WIDTH
@@ -174,12 +174,14 @@ def main_loop(gd: GameDisplay) -> None:
     snake_increase = 0
     tail = None
     another_loop = True
+    game.draw(gd)
+    gd.end_round()
     while another_loop:
         snake = game.get_snake()
         apples = game.apples_list()
         bombs = game.get_bombs()
 
-        time.sleep(0.5)  #every loop slow the time for check test
+        #time.sleep(0.9)  #every loop slow the time for check test
         key_clicked = gd.get_key_clicked()
         if key_clicked:
             snake.set_orientation(key_clicked)
@@ -188,10 +190,9 @@ def main_loop(gd: GameDisplay) -> None:
             snake_increase -= 1
         tail = snake.move()
 
-
         # check if snake run into himself
         if snake.get_head() in snake.get_locations()[1:]:
-            snake.remove_tail()
+            #snake.remove_tail()
             another_loop = False
 
         # check if the snake run into bomb
@@ -200,7 +201,6 @@ def main_loop(gd: GameDisplay) -> None:
             if -bomb.get_time() == bomb.get_redius():
                 game.remove_bomb(bomb)
             if snake.get_head() == bomb.get_location():
-                # TODO draw the big bomb on the board
                 another_loop = False
 
         # check if the snake get out of board
@@ -214,6 +214,7 @@ def main_loop(gd: GameDisplay) -> None:
                 snake_increase += 3
                 game.set_score(apple.get_score())
                 game.remove_apple(apple)
+                game.add_apples()
 
         # check if snake tuch the blasts
         if set(snake.get_locations()) & set(game.all_bombs_blasts()):
@@ -227,21 +228,8 @@ def main_loop(gd: GameDisplay) -> None:
 
 
 
-
-        # if blast hit an apple
-        # for apple in apples:
-        #     if apple.get_location() in bomb.blast_cords():
-        #         game.remove_apple(apple)
-
-
         gd.show_score(game.get_score())
         game.draw(gd)
         game.add_bombs()
-        game.add_apples()
 
         gd.end_round()
-
-# 78 Function call: GameDisplay(456,['Left', None, None, 'Down', 'Right', None, 'Up', 'Left', None, None, None, 'Up', 'Right', 'Down'],79
-# Expected return value: [(0, {(10, 10): 'black', (10, 9): 'black', (10, 8): 'black', (9, 10): 'red', (37, 9): 'green', (25, 29): 'green', (10, 27): 'green'}),
-#                         (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 11): 'black', (10, 10): 'black', (10, 9): 'black', (9, 10): 'red'}),
-#                         (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 12): 'black', (10, 11): 'black', (10, 10): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 13): 'black', (10, 12): 'black', (10, 11): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 14): 'black', (10, 13): 'black', (10, 12): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 15): 'black', (10, 14): 'black', (10, 13): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 16): 'black', (10, 15): 'black', (10, 14): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 17): 'black', (10, 16): 'black', (10, 15): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 18): 'black', (10, 17): 'black', (10, 16): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (10, 19): 'black', (10, 18): 'black', (10, 17): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (9, 19): 'black', (10, 19): 'black', (10, 18): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (8, 19): 'black', (9, 19): 'black', (10, 19): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 19): 'black', (8, 19): 'black', (9, 19): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 18): 'black', (7, 19): 'black', (8, 19): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 17): 'black', (7, 18): 'black', (7, 19): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 16): 'black', (7, 17): 'black', (7, 18): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 15): 'black', (7, 16): 'black', (7, 17): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 14): 'black', (7, 15): 'black', (7, 16): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 13): 'black', (7, 14): 'black', (7, 15): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 12): 'black', (7, 13): 'black', (7, 14): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 11): 'black', (7, 12): 'black', (7, 13): 'black', (9, 10): 'red'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 10): 'black', (7, 11): 'black', (7, 12): 'black', (9, 10): 'orange'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 9): 'black', (7, 10): 'black', (7, 11): 'black', (9, 11): 'orange', (8, 10): 'orange', (9, 9): 'orange', (10, 10): 'orange'}), (0, {(37, 9): 'green', (25, 29): 'green', (10, 27): 'green', (7, 8): 'black', (7, 9): 'black', (7, 10): 'orange', (9, 12): 'orange', (10, 11): 'orange', (8, 11): 'orange', (9, 8): 'orange', (8, 9): 'orange', (11, 10): 'orange', (10, 9): 'orange'})]

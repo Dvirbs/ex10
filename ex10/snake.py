@@ -72,21 +72,21 @@ class Snake:
 
     def move(self):
         """פונקציה המקבלת כיוון ומחזירה אמת אם הנחש זז בהצלחה, שקר אחרת"""
-        row_head = self.get_head()[0]
-        col_head = self.get_head()[1]
+        column_head = self.get_head()[0]
+        row_head = self.get_head()[1]
 
         if self.__orientation == "Up":
-            x = row_head
-            y = col_head + 1
+            x = column_head
+            y = row_head + 1
         elif self.__orientation == "Down":
-            x = row_head
-            y = col_head - 1
+            x = column_head
+            y = row_head - 1
         elif self.__orientation == "Right":
-            x = row_head + 1
-            y = col_head
+            x = column_head + 1
+            y = row_head
         else:
-            x = row_head - 1
-            y = col_head
+            x = column_head - 1
+            y = row_head
         new_head = (x, y)
         self.add_new_head(new_head)
         return self.remove_tail()
