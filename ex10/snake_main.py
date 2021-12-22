@@ -13,7 +13,7 @@ class Game:
     Hight = game_parameters.HEIGHT
     Width = game_parameters.WIDTH
     Apple_color = 'green'  # TODO האם צריך לרשום את זה מחוץ לאינט או בתוכו
-    Snake_color = 'Black'
+    Snake_color = 'black'
     Bomb_color = 'red'
     Blast_color = 'orange'
     Number_of_bombs = 1
@@ -251,7 +251,6 @@ def main_loop(gd) -> None:
         if snake.get_head() in snake.get_locations()[1:]:
             #snake.remove_tail()
             another_loop = False
-        #for noa
         # check if the snake run into bomb
         for bomb in bombs:
             bomb.time_getting_smaller()
