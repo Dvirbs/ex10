@@ -1,7 +1,6 @@
 import game_display
 import game_parameters
 import snake
-from game_display import GameDisplay
 from bomb import Bomb
 import bomb
 from snake import Snake
@@ -62,26 +61,79 @@ class Game:
             return False
         return True
 
-    def draw(self, gd):
+    def classifi(self, color):
+        black_cells: List = list()
+        red_cells: List = list()
+        orange_cells: List = list()
+        green_cells: List = list()
         for loc in self.snake.get_locations():
             if loc in self.all_bombs_blasts():
-                gd.draw_cell(loc[0], loc[1], self.Blast_color)
+                orange_cells.append((loc[0], loc[1]))
+                #gd.draw_cell(loc[0], loc[1], self.Blast_color)
             elif loc in self.bomb_cells():
-                gd.draw_cell(loc[0], loc[1], self.Bomb_color)
+                red_cells.append((loc[0], loc[1]))
+                #gd.draw_cell(loc[0], loc[1], self.Bomb_color)
             else:
-                gd.draw_cell(loc[0], loc[1], self.Snake_color)
-        for apple_row, apple_col in self.apples_cells():
-            gd.draw_cell(apple_row, apple_col, self.Apple_color)
+                black_cells.append((loc[0], loc[1]))
+                #gd.draw_cell(loc[0], loc[1], self.Snake_color)
+
         for bomb in self.get_bombs():
             if bomb.get_time() > 0:
                 bomb_row = bomb.get_location()[0]
                 bomb_col = bomb.get_location()[1]
-                gd.draw_cell(bomb_row, bomb_col, self.Bomb_color)
+                red_cells.append((bomb_row, bomb_col))
+                #gd.draw_cell(bomb_row, bomb_col, self.Bomb_color)
             else:
                 blast_cords_list = bomb.blast_cords()
                 for blast_row, blast_col in blast_cords_list:
                     if self.in_board(blast_row, blast_col):
-                        gd.draw_cell(blast_row, blast_col, self.Blast_color)
+                        orange_cells.append((blast_row, blast_col))
+                        #gd.draw_cell(blast_row, blast_col, self.Blast_color)
+        for apple_row, apple_col in self.apples_cells():
+            green_cells.append((apple_row, apple_col))
+            #gd.draw_cell(apple_row, apple_col, self.Apple_color)
+        if color == self.Bomb_color:
+            return red_cells
+        elif color == self.Blast_color:
+            return orange_cells
+        elif color == self.Snake_color:
+            return black_cells
+        else: #green color
+            return green_cells
+
+
+
+    def draw_cell(self,gd,color_cells_list, color):
+        for cell in color_cells_list:
+            x = cell[0]
+            y = cell[1]
+            gd.draw_cell(x, y, color)
+
+    # def draw_move(self, gd):   #Just for presubmition error
+    #     for apple_row, apple_col in self.apples_cells():
+    #         gd.draw_cell(apple_row, apple_col, self.Apple_color)
+    #
+    #     for bomb in self.get_bombs():
+    #         if bomb.get_time() > 0:
+    #             bomb_row = bomb.get_location()[0]
+    #             bomb_col = bomb.get_location()[1]
+    #             gd.draw_cell(bomb_row, bomb_col, self.Bomb_color)
+    #         else:
+    #             blast_cords_list = bomb.blast_cords()
+    #             for blast_row, blast_col in blast_cords_list:
+    #                 if self.in_board(blast_row, blast_col):
+    #                     gd.draw_cell(blast_row, blast_col, self.Blast_color)
+    #
+    #     for loc in self.snake.get_locations():
+    #         if loc in self.all_bombs_blasts():
+    #             gd.draw_cell(loc[0], loc[1], self.Blast_color)
+    #         elif loc in self.bomb_cells():
+    #             gd.draw_cell(loc[0], loc[1], self.Bomb_color)
+    #         else:
+    #             gd.draw_cell(loc[0], loc[1], self.Snake_color)
+
+
+
 
     ##### snake part  #####
 
@@ -165,7 +217,7 @@ class Game:
 
 
 
-def main_loop(gd: GameDisplay) -> None:
+def main_loop(gd) -> None:
     game = Game()
     game.set_initial_snake()
     game.add_bombs()
@@ -174,7 +226,12 @@ def main_loop(gd: GameDisplay) -> None:
     snake_increase = 0
     tail = None
     another_loop = True
-    game.draw(gd)
+
+    game.draw_cell(gd, game.classifi(game.Snake_color), game.Snake_color)
+    game.draw_cell(gd, game.classifi(game.Bomb_color), game.Bomb_color)
+    game.draw_cell(gd, game.classifi(game.Blast_color), game.Blast_color)
+    game.draw_cell(gd, game.classifi(game.Apple_color), game.Apple_color)
+
     gd.end_round()
     while another_loop:
         snake = game.get_snake()
@@ -229,7 +286,12 @@ def main_loop(gd: GameDisplay) -> None:
 
 
         gd.show_score(game.get_score())
-        game.draw(gd)
+
+        game.draw_cell(gd, game.classifi(game.Apple_color), game.Apple_color)
+        game.draw_cell(gd, game.classifi(game.Snake_color), game.Snake_color)
+        game.draw_cell(gd, game.classifi(game.Bomb_color), game.Bomb_color)
+        game.draw_cell(gd, game.classifi(game.Blast_color), game.Blast_color)
+
         game.add_bombs()
 
         gd.end_round()
