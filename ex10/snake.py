@@ -1,13 +1,25 @@
-# from node import Node
 from typing import *
-
 class Snake:
+    """
+    Snake object:
+    The snake is defined by a list where the first element in the
+    list represents the head while the last one represents the tail.
+    The snake has a direction of movement and color.
+    """
+    COLOR = "black"
+    INITIAL_ORIENTATION = "Up"
+    INITIAL_LENGTH = 0
     def __init__(self):
+        """
+        initialize Apple object:
+        head: none, tail: none, length: initial length, color: initial color,
+        orientation: initial orientation, locations: empty list.
+        """
         self.__head = None
         self.__tail = None
-        self.__length = 0
-        self.__color = None
-        self.__orientation = 'Up'
+        self.__length = self.INITIAL_LENGTH
+        self.__color = self.COLOR
+        self.__orientation = self.INITIAL_ORIENTATION
         self.__locations = []
 
     def get_length(self):
@@ -15,7 +27,7 @@ class Snake:
 
     def add_new_head(self, new_head: Tuple[int, int]) -> None:
         """
-        adds a location to the snake's head
+        add new head to the snake.
         :param new_head: tuple of new head location
         :return: None
         """
@@ -37,7 +49,7 @@ class Snake:
 
     def remove_tail(self):
         """
-        rmove the location of the snake's tail
+        remove the cell of the snake's tail
         :return: None
         """
         self.__length -= 1
@@ -45,7 +57,7 @@ class Snake:
 
     def remove_head(self):
         """
-        rmove the location of the snake's tail
+        remove the cell of the snake's head
         :return: None
         """
         self.__length -= 1
@@ -55,7 +67,7 @@ class Snake:
         self.__color = color
 
     def possible_moves(self):
-        """מחזירה על סמך הכיוון הנוכחי של הנחש מהם המהלכים האפשריים"""
+        """Returns based on the current direction of the snake the possible moves"""
         if self.__orientation == "Right":
             return ["Down", "Up"]
         if self.__orientation == "Left":
@@ -66,12 +78,16 @@ class Snake:
             return ["Right", "Left"]
 
     def set_orientation(self, movekey):
+        """Updates the direction of the snake"""
         possible_move = self.possible_moves()
-        if movekey in possible_move:  # אם הכיוון נמצא ברשימת הכיוונים - נעדכן את הכיוון.
+        # If a direction is in the direction list we will update it
+        if movekey in possible_move:
             self.__orientation = movekey
 
     def move(self):
-        """פונקציה המקבלת כיוון ומחזירה אמת אם הנחש זז בהצלחה, שקר אחרת"""
+        """A function that advances the snake one step in the current direction.
+            Return the deleted tail.
+        """
         column_head = self.get_head()[0]
         row_head = self.get_head()[1]
 
